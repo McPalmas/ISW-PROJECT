@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>E-commerce</title>
+</head>
+<body>
+    <h1 align="center"> E-commerce </h1>
+<div>
+    <h2> Lista Prodotti </h2>
+
+    <ul>
+        {% for prodotto in prodotti %}
+            <li>
+                <h3>{{ prodotto.nome }}</h3>
+                <p>{{ prodotto.descrizione }}</p>
+                <p>Prezzo: ${{ prodotto.prezzo }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+
+</div>
+</body>
+</html>

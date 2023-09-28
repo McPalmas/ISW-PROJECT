@@ -1,7 +1,7 @@
 from django.shortcuts import render
-
+from .models import Prodotto
 from django.http import HttpResponse
 
-def index(request):
-    return  HttpResponse("Hello World")
-
+def lista_prodotti(request):
+    prodotti = Prodotto.objects.all()
+    return render(request, 'polls/Prodotti.html', {'prodotti': prodotti})
