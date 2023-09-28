@@ -5,8 +5,18 @@
     <title>E-commerce</title>
 </head>
 <body>
+
+    <nav>
+    <ul>
+        <li><a href="#"> Home </a></li>
+        <li><a href="#"> Carrello </a></li>
+
+    </ul>
+    </nav>
+
     <h1 align="center"> E-commerce </h1>
-<div>
+
+    <div>
     <h2> Lista Prodotti </h2>
 
     <ul>
@@ -15,10 +25,11 @@
                 <h3>{{ prodotto.nome }}</h3>
                 <p>{{ prodotto.descrizione }}</p>
                 <p>Prezzo: ${{ prodotto.prezzo }}</p>
+                <button> Aggiungi al carrello </button>
+                <hr>
             </li>
         {% endfor %}
     </ul>
-
-</div>
+    </div>
 </body>
 </html>
