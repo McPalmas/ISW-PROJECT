@@ -1,0 +1,124 @@
+body{
+margin:0;
+padding:0;
+
+}
+
+nav.barraHome {
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+}
+
+ul{
+list-style:none;
+}
+
+.navItem{
+display: flex;
+}
+
+.navItem li{
+margin-left: 300px;
+}
+
+a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 20px;
+}
+
+
+nav a:hover {
+    background-color: #555;
+}
+.sezioneRicerca{
+margin-top: 10px;
+}
+
+form{
+text-align:center;
+}
+
+.barraRicerca{
+height:25px;
+width:500px;
+border-radius: 5px;
+}
+
+.buttonRicerca{
+    width: 80px;
+    height: 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #333;
+    color: #fff;
+}
+
+.Titolo{
+    align:center;
+    text-align: center;
+    font-size: 40px;
+    color: #333;
+    margin-top: 20px;
+}
+
+.filtro{
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.listaProdotti {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 5;
+    list-style: none;
+}
+
+.schedaProdotto {
+    margin-bottom: 20px;
+    width: 380px;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    margin-left: 55px;
+}
+
+.aggiungiCarrello {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left:120px;
+}
+
+.aggiungiCarrello:hover {
+    background-color: #555;
+}
+
+.titoloProdotto{
+    text-align: center;
+    font-size: 25px;
+    margin-bottom: 1px;
+    margin-top: 2px;
+}
+
+.descrizioneProdotto{
+    margin-left:5px;
+    font-size: 18px;
+}
+
+.prezzoProdotto{
+    margin-left:5px;
+    font-weight: bold;
+}
