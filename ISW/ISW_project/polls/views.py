@@ -7,6 +7,7 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.views import LogoutView
 from django.urls import reverse_lazy
 from django.contrib import messages
+from .forms import RegisterForm
 from django.template import loader
 from django.views.generic.list import ListView
 
@@ -31,8 +32,17 @@ class UserLoginView(LoginView):
         return reverse_lazy('home')
 
 
-class HomeView(ListView):
-     model = Prodotto
-     template_name = 'polls/Prodotti.html'
-     context_object_name = 'prodotti'
+class RegisterView(FormView):
+    template_name = 'polls/register.html'
+    form_class = RegisterForm
+    redirect_authenticated_user = True
+    success_url = reverse_lazy('login')
+
+    def form_valid(self, form):
+        user = form.save()
+        if user:
+            login(self.request, user)
+
+        messages.success(self.request, 'Account created successfully!')
+        return super(RegisterView, self).form_valid(form)
 
