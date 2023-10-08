@@ -10,10 +10,12 @@ from django.contrib import messages
 from .forms import RegisterForm
 from django.template import loader
 from django.views.generic.list import ListView
+from django.contrib.auth.decorators import login_required
 
+@login_required(login_url='login/')
 def lista_prodotti(request):
     #recupero filtro e query di ordinamento
-    print("La vista lista_prodotti è stata chiamata")
+    #print("La vista lista_prodotti è stata chiamata")
     order_by = request.GET.get('order_by')
     if order_by in ['prezzo','-prezzo','nome','-nome']:
         prodotti = Prodotto.objects.order_by(order_by)
