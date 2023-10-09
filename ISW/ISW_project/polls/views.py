@@ -9,7 +9,7 @@ from .forms import RegisterForm
 from django.contrib.auth.decorators import login_required
 
 
-@login_required(login_url='login/')
+#@login_required(login_url='login/')
 def lista_prodotti(request):
     #recupero filtro e query di ordinamento
     #print("La vista lista_prodotti è stata chiamata")
@@ -74,7 +74,7 @@ def aggiungi_al_carrello(request, id):
 
     num_elementi_carrello = carrello.numero_elementi
 
-    return redirect('lista_prodotti')
+    return redirect('home')
 
 
 def rimuovi_dal_carrello(request, id):
@@ -94,7 +94,13 @@ def rimuovi_dal_carrello(request, id):
 
 
 def pagamento(request):
-    return redirect('lista_prodotti')
+    elementi_carrello = Carrello.objects.get(user=request.user)
+    prezzo_totale = 0
+    for obj in elementi_carrello:
+        prezzo_totale = prezzo_totale + obj.prezzo * obj.quantita
+
+    context = {'elementi_carrello': elementi_carrello, 'prezzo_totale': prezzo_totale}
+    return render(request, "polls/Pagamento.html", context)
 
 
 def home_page(request):

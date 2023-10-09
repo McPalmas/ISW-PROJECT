@@ -16,7 +16,7 @@ class Prodotto(models.Model):
 # definizione del carrello
 class Carrello(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     completato = models.BooleanField(default=False)
 
     def __str__(self):

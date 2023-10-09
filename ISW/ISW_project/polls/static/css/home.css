@@ -4,6 +4,12 @@ padding:0;
 
 }
 
+a{
+    color: black;
+    text-decoration: none;
+    margin: 0 20px;
+}
+
 nav.barraHome {
     background-color: #333;
     color: #fff;
@@ -24,13 +30,6 @@ display: flex;
 .navItem li{
 margin-left: 300px;
 }
-
-a {
-    color: #fff;
-    text-decoration: none;
-    margin: 0 20px;
-}
-
 
 nav a:hover {
     background-color: #555;
@@ -92,7 +91,7 @@ border-radius: 5px;
 
 .aggiungiCarrello {
     background-color: #333;
-    color: #fff;
+    color: black;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -102,7 +101,7 @@ border-radius: 5px;
 }
 
 .aggiungiCarrello:hover {
-    background-color: red;
+    color: rgb(0, 0, 0);
 }
 
 .titoloProdotto{
