@@ -59,7 +59,6 @@ border-radius: 5px;
 }
 
 .Titolo{
-    align:center;
     text-align: center;
     font-size: 40px;
     color: #333;
@@ -77,7 +76,7 @@ border-radius: 5px;
 .listaProdotti {
     display: flex;
     flex-wrap: wrap;
-    padding: 5;
+    padding: 5px;
     list-style: none;
 }
 
@@ -103,7 +102,7 @@ border-radius: 5px;
 }
 
 .aggiungiCarrello:hover {
-    background-color: #555;
+    background-color: red;
 }
 
 .titoloProdotto{
@@ -121,4 +120,59 @@ border-radius: 5px;
 .prezzoProdotto{
     margin-left:5px;
     font-weight: bold;
+}
+
+/* Carrello*/
+
+.carrello .descrizione{
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    background-color: #6050DC;
+    border-radius: 5px;
+    color: red;
+    margin-top: 10px;
+}
+
+.carrello p{
+    font-size: 20px;
+}
+
+.carrello .infoProd{
+    width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carrello .oggetto{
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    border: 2px solid #6050DC;
+    margin-bottom: 10px;
+}
+
+.carrello .oggetto .infoOgetto{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 350px;
+}
+
+.rimuovi_dal_carrello {
+    text-decoration: none;
+    background-color: #e58989;
+}
+
+.carrelloVuoto{
+    background-color: #6050DC;
+}
+
+.pagamento{
+    background-color: #e58989;
 }

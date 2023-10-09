@@ -4,6 +4,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-commerce</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
 </head>
@@ -12,7 +14,7 @@
     <nav class="barraHome">
     <ul class="navItem">
         <li><a href="{% url 'home' %}"> Home </a></li>
-        <li><a href="#"> Carrello </a></li>
+        <li><a href="{% url 'carrello' %}"> Carrello </a></li>
         <li><a href="{% url 'logout' %}"> Logout </a></li>
     </ul>
     </nav>
@@ -52,8 +54,7 @@
                 <h3 class="titoloProdotto">{{ prodotto.nome }}</h3>
                 <p class="descrizioneProdotto">{{ prodotto.descrizione }}</p>
                 <p class="prezzoProdotto">Prezzo: ${{ prodotto.prezzo }}</p>
-                <button class="aggiungiCarrello"> Aggiungi al carrello </button>
-
+                <a href="{% url 'aggiungi_al_carrello' prodotto.id %}" class="aggiungiAlCarrello"> Aggiungi al carrello </a>
             </div>
         {% endfor %}
 

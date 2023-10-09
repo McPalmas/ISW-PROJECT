@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> Carrello </title>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+    </head>
+
+    <body>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}"> Home </a></li>
+                <li><a href="{% url 'lista_prodotti' %}"> Carrello </a></li>
+                <li><a href="{% url 'logout' %}"> Logout </a></li>
+            </ul>
+        </nav>
+
+        <div class="carrello">
+          <h2> Carrello </h2>
+
+          <div class="descrizione">
+            <div class="infoProd"> <h4> Nome Prodotto </h4> </div>
+            <div class="infoProd"> <h4> Quantità </h4> </div>
+            <div class="infoProd"> <h4> Prezzo </h4> </div>
+            <div class="infoProd"> <h4> Prezzo Totale </h4> </div>
+          </div>
+
+          <div class="contenitoreProdotti">
+          {% if elementiCarrello|length > 0 %}
+            {% for oggetto in elementiCarrello %}
+                {% if oggetto.quantita > 0 %}
+                    <div class="oggetto">
+                      <div class="infoOggetto">
+                        <p> {{oggetto.prodotto.nome}} </p>
+                      </div>
+
+                      <div class="nome"> <p id="quantita"> {{oggetto.quantita}} </p> </div>
+                      <div class="nome"> <p> {{oggetto.prodotto.prezzo}}€ </p> </div>
+                      <div class="nome"> <p> {{oggetto.prezzo}}€ </p> </div>
+                      <a href="{% url 'rimuovi_dal_carrello' oggetto.prodotto.id %}" class="rimuovi_dal_carrello"> Rimuovi dal carrello </a>
+                    </div>
+               {% endif %}
+            {% endfor %}
+            {% endif %}
+         {% if elementiCarrello|length > 0 %}
+          <div class="elementiCarrello">
+            <p> Elementi nel carrello: </p>
+            <p id="numeroElementiCarrello"> {{carrello.numero_elementi}} </p>
+          </div>
+          {% endif %}
+          </div>
+              {% if elementiCarrello|length > 0 %}
+              <div class="pagamento">
+                <h3> Totale: {{carrello.prezzo_complessivo_carrello}} € </h3>
+                <a href="{% url 'pagamento' %}"> Pagamento </a>
+              </div>
+        {% endif %}
+         {% if elementiCarrello|length == 0 %}
+                <div class="carrelloVuoto">
+                    <p> Non ci sono elementi nel carrello </p>
+                </div>
+        {% endif %}
+        </div>
+    </body>
+</html>

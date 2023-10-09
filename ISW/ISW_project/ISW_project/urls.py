@@ -21,6 +21,8 @@ from django.urls import include, path
 
 from polls import views
 
+app_name = "polls"
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.UserLoginView.as_view(), name='login'),
@@ -29,4 +31,10 @@ urlpatterns = [
     path('register/', views.RegisterView.as_view(), name='register'),
     path('home/', login_required(views.lista_prodotti), name='home'),
     path('accounts/login/', views.UserLoginView.as_view(), name='login'),
+    path('', views.lista_prodotti, name="lista_prodotti"),
+    path('carrello/', views.carrello, name="carrello"),
+    path('aggiungi_al_carrello/<int:id>/', views.aggiungi_al_carrello, name="aggiungi_al_carrello"),
+    path('rimuovi_dal_carrello/<int:id>/', views.rimuovi_dal_carrello, name="rimuovi_dal_carrello"),
+    path('home_page/', views.home_page, name="home_page"),
+    path('pagamento/', views.pagamento, name="pagamento")
 ]

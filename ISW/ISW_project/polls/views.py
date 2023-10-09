@@ -1,16 +1,13 @@
 from django.contrib.auth import login
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import FormView
-from .models import Prodotto
-from django.http import HttpResponse
+from .models import *
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.views import LogoutView
 from django.urls import reverse_lazy
 from django.contrib import messages
 from .forms import RegisterForm
-from django.template import loader
-from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
+
 
 @login_required(login_url='login/')
 def lista_prodotti(request):
@@ -28,6 +25,7 @@ def lista_prodotti(request):
         prodotti = prodotti.filter(nome__icontains=search_term)
 
     return render(request, 'polls/Prodotti.html', {'prodotti': prodotti})
+
 
 class UserLoginView(LoginView):
     def get_success_url(self):
@@ -48,3 +46,56 @@ class RegisterView(FormView):
         messages.success(self.request, 'Account created successfully!')
         return super(RegisterView, self).form_valid(form)
 
+
+def carrello(request):
+    carrello = None
+    elementiCarrello = []
+
+    if request.user.is_authenticated:
+        carrello, creato = Carrello.objects.get_or_create(user=request.user, completato=False)
+        elementiCarrello = carrello.elementiCarrello.all()
+
+    if carrello.numero_elementi == 0:
+        context = {"carrello": carrello, "elementiCarrello": elementiCarrello}
+        return render(request, "polls/Carrello.html", context)
+    context = {"carrello": carrello, "elementiCarrello": elementiCarrello}
+    return render(request, "polls/Carrello.html", context)
+
+
+def aggiungi_al_carrello(request, id):
+    product = Prodotto.objects.get(id=id)
+    carrello = []
+
+    if request.user.is_authenticated:
+        carrello, creato = Carrello.objects.get_or_create(user=request.user, completato=False)
+        elemento, creato = ElementoCarrello.objects.get_or_create(carrello=carrello, prodotto=product)
+        elemento.quantita += 1
+        elemento.save()
+
+    num_elementi_carrello = carrello.numero_elementi
+
+    return redirect('lista_prodotti')
+
+
+def rimuovi_dal_carrello(request, id):
+    product = Prodotto.objects.get(id=id)
+    carrello = []
+
+    if request.user.is_authenticated:
+        carrello, creato = Carrello.objects.get_or_create(user=request.user, completato=False)
+        elemento, creato = ElementoCarrello.objects.get_or_create(carrello=carrello, prodotto=product)
+        if elemento.quantita > 0:
+            elemento.quantita -= 1
+            elemento.save()
+        else:
+            elemento.delete()
+
+    return redirect('carrello')
+
+
+def pagamento(request):
+    return redirect('lista_prodotti')
+
+
+def home_page(request):
+    return render(request, 'polls/Prodotti.html')
