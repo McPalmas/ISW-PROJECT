@@ -1,15 +1,16 @@
 from django.contrib.auth import login
 from django.shortcuts import render, redirect
+from django.views import View
 from django.views.generic import FormView
 from .models import *
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .forms import RegisterForm
+from .forms import RegisterForm, CheckoutForm
 from django.contrib.auth.decorators import login_required
 
 
-#@login_required(login_url='login/')
+@login_required(login_url='login/')
 def lista_prodotti(request):
     #recupero filtro e query di ordinamento
     #print("La vista lista_prodotti è stata chiamata")
@@ -45,6 +46,19 @@ class RegisterView(FormView):
 
         messages.success(self.request, 'Account created successfully!')
         return super(RegisterView, self).form_valid(form)
+
+
+class CheckoutView(View):
+    def get(self, *args, **kwargs):
+        form = CheckoutForm()
+        context = {'form': form}
+        return render(self.request, 'polls/Pagamento.html', context)
+
+    def post(self, *args, **kwargs):
+        form = CheckoutForm(self.request.POST or None)
+        if form.is_valid():
+            print("The form is valid")
+            return redirect('polls:pagamento')
 
 
 def carrello(request):
@@ -91,16 +105,6 @@ def rimuovi_dal_carrello(request, id):
             elemento.delete()
 
     return redirect('carrello')
-
-
-def pagamento(request):
-    elementi_carrello = Carrello.objects.get(user=request.user)
-    prezzo_totale = 0
-    for obj in elementi_carrello:
-        prezzo_totale = prezzo_totale + obj.prezzo * obj.quantita
-
-    context = {'elementi_carrello': elementi_carrello, 'prezzo_totale': prezzo_totale}
-    return render(request, "polls/Pagamento.html", context)
 
 
 def home_page(request):

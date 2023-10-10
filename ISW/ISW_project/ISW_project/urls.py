@@ -36,5 +36,5 @@ urlpatterns = [
     path('aggiungi_al_carrello/<int:id>/', views.aggiungi_al_carrello, name="aggiungi_al_carrello"),
     path('rimuovi_dal_carrello/<int:id>/', views.rimuovi_dal_carrello, name="rimuovi_dal_carrello"),
     path('home_page/', views.home_page, name="home_page"),
-    path('pagamento/', views.pagamento, name="pagamento")
+    path('pagamento/', views.CheckoutView.as_view(), name="pagamento")
 ]
