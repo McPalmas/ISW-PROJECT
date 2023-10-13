@@ -25,8 +25,8 @@ def lista_prodotti(request):
         prodotti = prodotti.order_by(order_by)
 
 
-    if filtro_categoria and filtro_categoria != 'All':
-        prodotti = prodotti.filter(categoria= filtro_categoria)
+    if filtro_categoria and filtro_categoria!='Tutte le categorie':
+        prodotti = prodotti.filter(categoria=filtro_categoria)
 
 
     #recupero valore del form per la ricerca
