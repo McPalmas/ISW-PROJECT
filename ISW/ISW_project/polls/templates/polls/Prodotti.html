@@ -34,16 +34,24 @@
     <h2 align="center"> Lista Prodotti </h2>
     </div>
 
-    <div>
+    <div class="sezioneFiltri">
     <form  method="get">
-        <select class="filtro" name="order_by" class="styled-select">
+        <select name="order_by" class="styled-select">
                 <option value="nessuno">Nessuno</option>
                 <option value="prezzo" >Prezzo: In ordine crescente</option>
                 <option value="-prezzo" >Prezzo: In ordine decrescente</option>
                 <option value="nome" >A-Z</option>
                 <option value="-nome" >Z-A</option>
         </select>
-        <button type="submit"> Filtra </button>
+
+        <select name="filtro_categoria">
+            <option> Tutte le categorie </option>
+            {% for categoria in categorie %}
+            <option> {{categoria}} </option>
+            {% endfor %}
+
+        </select>
+        <button class="buttonRicerca" type="submit"> Filtra </button>
 
     </form>
     </div>

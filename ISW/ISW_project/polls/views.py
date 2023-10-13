@@ -12,20 +12,29 @@ from django.contrib.auth.decorators import login_required
 
 @login_required(login_url='login/')
 def lista_prodotti(request):
+    # recupero le categorie definite
+    categorie = Prodotto.objects.values_list('categoria', flat=True).distinct()
+
+    prodotti = Prodotto.objects.all()
+
     #recupero filtro e query di ordinamento
-    #print("La vista lista_prodotti è stata chiamata")
     order_by = request.GET.get('order_by')
+    filtro_categoria = request.GET.get('filtro_categoria')
+
     if order_by in ['prezzo','-prezzo','nome','-nome']:
-        prodotti = Prodotto.objects.order_by(order_by)
-    else:
-        prodotti = Prodotto.objects.all()
+        prodotti = prodotti.order_by(order_by)
+
+
+    if filtro_categoria and filtro_categoria != 'All':
+        prodotti = prodotti.filter(categoria= filtro_categoria)
+
 
     #recupero valore del form per la ricerca
     search_term = request.GET.get('search')
     if search_term:
         prodotti = prodotti.filter(nome__icontains=search_term)
 
-    return render(request, 'polls/Prodotti.html', {'prodotti': prodotti})
+    return render(request, 'polls/Prodotti.html', {'prodotti': prodotti,'categorie': categorie})
 
 
 class UserLoginView(LoginView):
