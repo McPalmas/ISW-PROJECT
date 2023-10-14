@@ -55,7 +55,7 @@ class RegisterView(FormView):
         messages.success(self.request, 'Account created successfully!')
         return super(RegisterView, self).form_valid(form)
 
-
+"""
 class CheckoutView(View):
     context = {}
 
@@ -69,15 +69,55 @@ class CheckoutView(View):
         return render(self.request, 'polls/Checkout.html', self.context)
 
     def post(self, request):
+        carr = Carrello.objects.get(user=request.user, completato=False)
         form = OrdineForm(request.POST)
         if form.is_valid():
             instance = form.save(commit=False)
             instance.user = request.user
             instance.save()
 
+            for prodotto in carr:
+                instance.prodotti.add(prodotto)
+
         self.context['form'] = form
-        self.context['detail'] = Ordine.objects.all()
+        self.context['products'] = Ordine.objects.all()
+        Carrello.objects.all().delete()
+        return render(self.request, 'polls/carrello.html', self.context)
+"""
+
+
+class CheckoutView(View):
+    context = {}
+
+    def get(self, request):
+        form = OrdineForm(request.GET or None)
+        carrello = Carrello.objects.get(user=request.user, completato=False)
+
+        self.context['prezzo_totale'] = carrello.prezzo_complessivo_carrello
+        self.context['numero_elementi'] = carrello.numero_elementi
+        self.context['form'] = form
         return render(self.request, 'polls/Checkout.html', self.context)
+
+    def post(self, request):
+        carrello = Carrello.objects.all()
+        form = OrdineForm(request.POST or None)
+
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.user = request.user
+            instance.save()
+
+            for elemento in carrello.elementiCarrello.all():
+                instance.prodotti.add(elemento.prodotto)
+
+            # Ora che l'ordine è registrato, segnala il carrello come completato e svuotalo
+            carrello.completato = True
+            carrello.save()
+
+        self.context['form'] = form
+        self.context['order'] = Ordine.objects.all()
+        Carrello.objects.all().delete()
+        return render(self.request, 'polls/Carrello.html', self.context)
 
 
 def carrello(request):

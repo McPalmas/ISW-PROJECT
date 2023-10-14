@@ -60,11 +60,11 @@ class Ordine(models.Model):
     regione = models.TextField(max_length=150, null=False)
     provincia = models.TextField(max_length=150, null=False)
     codice_postale = models.TextField(max_length=10, null=False)
-    prezzo_totale = models.DecimalField(max_digits=10, decimal_places=2, null=False)
     modalita_pagamento = models.TextField(max_length=150, null=False)
+    prodotti = models.ManyToManyField(Prodotto)
 
     def __init__(self, *args, **kwargs):
-        super().__init__(args, kwargs)
+        super().__init__(*args, **kwargs)
         self.elementiOrdine = None
 
     def __str__(self):
