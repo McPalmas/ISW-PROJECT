@@ -95,7 +95,7 @@ def carrello(request):
     return render(request, "polls/Carrello.html", context)
 
 
-def aggiungi_al_carrello(request, id):
+def add_to_cart(request, id):
     product = Prodotto.objects.get(id=id)
     carrello = []
 
@@ -109,6 +109,7 @@ def aggiungi_al_carrello(request, id):
 
     return redirect('home')
 
+
 def remove_product(request, id):
     product = Prodotto.objects.get(id=id)
     carrello = []
@@ -121,6 +122,7 @@ def remove_product(request, id):
     num_elementi_carrello = carrello.numero_elementi
 
     return redirect('carrello')
+
 
 def decrease_quantity(request, id):
     product = Prodotto.objects.get(id=id)

@@ -50,12 +50,12 @@ class ElementoCarrello(models.Model):
 
 
 class Ordine(models.Model):
-    utente = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     nome = models.TextField(max_length=150, null=False)
     cognome = models.TextField(max_length=150, null=False)
     email = models.EmailField(max_length=254, null=False)
     indirizzo = models.TextField(max_length=254, null=False)
-    stato = CountryField()
+    stato = CountryField(blank=True, blank_label='(Seleziona il paese)', null=False)
     citta = models.TextField(max_length=150, null=False)
     regione = models.TextField(max_length=150, null=False)
     provincia = models.TextField(max_length=150, null=False)

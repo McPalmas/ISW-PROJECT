@@ -62,7 +62,7 @@
                 <h3 class="titoloProdotto">{{ prodotto.nome }}</h3>
                 <p class="descrizioneProdotto">{{ prodotto.descrizione }}</p>
                 <p class="prezzoProdotto">Prezzo: ${{ prodotto.prezzo }}</p>
-                <a href="{% url 'aggiungi_al_carrello' prodotto.id %}" class="aggiungiAlCarrello"> Aggiungi al carrello </a>
+                <a href="{% url 'add_to_cart' prodotto.id %}" class="aggiungiAlCarrello"> Aggiungi al carrello </a>
             </div>
         {% endfor %}
 

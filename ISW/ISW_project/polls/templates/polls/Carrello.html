@@ -60,37 +60,22 @@
         <div class="elementiCarrello">
             <p> Elementi nel carrello: </p>
             <p id="numeroElementiCarrello"> {{carrello.numero_elementi}} </p>
-<<<<<<< HEAD
           </div>
           {% endif %}
           </div>
-              {% if not elementiCarrello.count <= 0 %}
-              <div class="pagamento">
-                <h3> Totale: {{carrello.prezzo_complessivo_carrello}} € </h3>
-                <a href="{% url 'get' %}"> Pagamento </a>
-              </div>
-        {% endif %}
-         {% if not elementiCarrello.count > 0 %}
-                <div class="carrelloVuoto">
-                    <p> Non ci sono elementi nel carrello </p>
-                </div>
-        {% endif %}
-=======
->>>>>>> refs/remotes/origin/main
         </div>
-        {% endif %}
-    </div>
     {% if not elementiCarrello.count <= 0 %}
     <div class="pagamento">
         <h3> Totale: {{carrello.prezzo_complessivo_carrello}} € </h3>
-        <a href="{% url 'pagamento' %}"> Pagamento </a>
+        <a href="{% url 'checkout' %}"> Pagamento </a>
     </div>
     {% endif %}
+
     {% if not elementiCarrello.count > 0 %}
     <div class="carrelloVuoto">
         <p> Non ci sono elementi nel carrello </p>
     </div>
     {% endif %}
-</div>
+
 </body>
 </html>
