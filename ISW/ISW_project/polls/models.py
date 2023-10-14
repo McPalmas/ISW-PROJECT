@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 import uuid
 
+from django_countries.fields import CountryField
+
 
 class Prodotto(models.Model):
     nome = models.TextField(default='Nome di default')
@@ -47,13 +49,12 @@ class ElementoCarrello(models.Model):
 
 
 class Ordine(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    utente = models.ForeignKey(User, on_delete=models.CASCADE)
     nome = models.TextField(max_length=150, null=False)
     cognome = models.TextField(max_length=150, null=False)
     email = models.EmailField(max_length=254, null=False)
-    numero_telefono = models.TextField(max_length=20, null=False)
     indirizzo = models.TextField(max_length=254, null=False)
+    stato = CountryField()
     citta = models.TextField(max_length=150, null=False)
     regione = models.TextField(max_length=150, null=False)
     provincia = models.TextField(max_length=150, null=False)

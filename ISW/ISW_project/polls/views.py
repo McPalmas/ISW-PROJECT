@@ -1,4 +1,5 @@
 from django.contrib.auth import login
+from django.db.models import Sum
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import FormView
@@ -6,7 +7,7 @@ from .models import *
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .forms import RegisterForm, CheckoutForm
+from .forms import RegisterForm, CheckoutForm, OrdineForm
 from django.contrib.auth.decorators import login_required
 
 
@@ -49,16 +50,27 @@ class RegisterView(FormView):
 
 
 class CheckoutView(View):
-    def get(self, *args, **kwargs):
-        form = CheckoutForm()
-        context = {'form': form}
-        return render(self.request, 'polls/Pagamento.html', context)
+    context = {}
 
-    def post(self, *args, **kwargs):
-        form = CheckoutForm(self.request.POST or None)
+    def get(self, request):
+        form = OrdineForm()
+        carr = Carrello.objects.get(user=request.user, completato=False)
+
+        self.context['prezzo_totale'] = carr.prezzo_complessivo_carrello
+        self.context['numero_elementi'] = carr.numero_elementi
+        self.context['form'] = form
+        return render(self.request, 'polls/Checkout.html', self.context)
+
+    def post(self, request):
+        form = OrdineForm(request.POST)
         if form.is_valid():
-            print("The form is valid")
-            return redirect('polls:pagamento')
+            instance = form.save(commit=False)
+            instance.user = request.user
+            instance.save()
+
+        self.context['form'] = form
+        self.context['detail'] = Ordine.objects.all()
+        return render(self.request, 'polls/Checkout.html', self.context)
 
 
 def carrello(request):

@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import *
 
 
-admin.site.register([Carrello, ElementoCarrello])
+admin.site.register([Carrello, ElementoCarrello, Ordine])
 @admin.register(Prodotto)
 class ProdottoAdmin(admin.ModelAdmin):
     list_display = ('nome', 'descrizione', 'prezzo')
