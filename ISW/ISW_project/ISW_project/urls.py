@@ -34,7 +34,14 @@ urlpatterns = [
     path('', views.lista_prodotti, name="lista_prodotti"),
     path('carrello/', views.carrello, name="carrello"),
     path('aggiungi_al_carrello/<int:id>/', views.aggiungi_al_carrello, name="aggiungi_al_carrello"),
+<<<<<<< HEAD
     path('rimuovi_dal_carrello/<int:id>/', views.rimuovi_dal_carrello, name="rimuovi_dal_carrello"),
     path('get/', views.CheckoutView.as_view(), name="get"),
     path('post/', views.CheckoutView.as_view(), name="post")
+=======
+    path('remove_product/<int:id>/', views.remove_product, name="remove_product"),
+    path('increase_quantity/<int:id>/', views.increase_quantity, name="increase_quantity"),
+    path('decrease_quantity/<int:id>/', views.decrease_quantity, name="decrease_quantity"),
+    path('pagamento/', views.CheckoutView.as_view(), name="pagamento")
+>>>>>>> refs/remotes/origin/main
 ]

@@ -6,9 +6,10 @@ from django_countries.fields import CountryField
 
 
 class Prodotto(models.Model):
-    nome = models.TextField(default='Nome di default')
-    descrizione = models.TextField(default='Descrizione di default')
+    nome = models.TextField(max_length=250)
+    descrizione = models.TextField(max_length=400)
     prezzo = models.DecimalField(max_digits=10, decimal_places=2)
+    categoria = models.TextField(max_length=250)
 
     def __str__(self):
         return str(self.nome)
