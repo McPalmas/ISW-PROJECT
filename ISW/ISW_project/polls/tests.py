@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Prodotto
+from .models import *
 from django.contrib.auth.models import User
 
 
@@ -14,6 +14,142 @@ class ProdottoModelTest(TestCase):
         self.assertEqual(prodotto.nome, 'Prodotto di test')
         self.assertEqual(prodotto.descrizione, 'Descrizione di test')
         self.assertEqual(prodotto.prezzo, 10.00)
+
+class CarrelloTests(TestCase):
+
+    def test_creazione_carrello(self):
+        """
+        Verifica che sia possibile creare un nuovo carrello.
+        """
+        user = User.objects.create(username="test_user")
+        carrello = Carrello.objects.create(user=user)
+        self.assertNotEqual(carrello.id, None)
+        self.assertEqual(carrello.user, user)
+        self.assertEqual(carrello.completato, False)
+
+    def test_prezzo_complessivo_carrello(self):
+        """
+        Verifica che il prezzo complessivo del carrello sia corretto.
+        """
+        user = User.objects.create(username="test_user")
+        carrello = Carrello.objects.create(user=user)
+        elemento_carrello_1 = ElementoCarrello.objects.create(
+            carrello=carrello, prodotto=Prodotto.objects.create(nome="Prodotto 1", prezzo=10.00), quantita=1
+        )
+        elemento_carrello_2 = ElementoCarrello.objects.create(
+            carrello=carrello, prodotto=Prodotto.objects.create(nome="Prodotto 2", prezzo=20.00), quantita=2
+        )
+        self.assertEqual(carrello.prezzo_complessivo_carrello, 50.00)
+
+    def test_numero_elementi(self):
+        """
+        Verifica che il numero di elementi nel carrello sia corretto.
+        """
+        user = User.objects.create(username="test_user")
+        carrello = Carrello.objects.create(user=user)
+        elemento_carrello_1 = ElementoCarrello.objects.create(
+            carrello=carrello, prodotto=Prodotto.objects.create(nome="Prodotto 1", prezzo=10.00), quantita=1
+        )
+        elemento_carrello_2 = ElementoCarrello.objects.create(
+            carrello=carrello, prodotto=Prodotto.objects.create(nome="Prodotto 2", prezzo=20.00), quantita=2
+        )
+        self.assertEqual(carrello.numero_elementi, 3)
+
+
+class ElementoCarrelloTests(TestCase):
+
+    def test_creazione_elemento_carrello(self):
+        """
+        Verifica che sia possibile creare un nuovo elemento del carrello.
+        """
+        user = User.objects.create(username="test_user")
+        carrello = Carrello.objects.create(user=user)
+        prodotto = Prodotto.objects.create(nome="Prodotto 1", prezzo=10.00)
+        elemento_carrello = ElementoCarrello.objects.create(
+            prodotto=prodotto, carrello=carrello, quantita=1
+        )
+        self.assertEqual(elemento_carrello.prodotto, prodotto)
+        self.assertEqual(elemento_carrello.carrello, carrello)
+        self.assertEqual(elemento_carrello.quantita, 1)
+
+    def test_prezzo_elemento_carrello(self):
+        """
+        Verifica che il prezzo dell'elemento del carrello sia corretto.
+        """
+        user = User.objects.create(username="test_user")
+        carrello = Carrello.objects.create(user=user)
+        prodotto = Prodotto.objects.create(nome="Prodotto 1", prezzo=10.00)
+        elemento_carrello = ElementoCarrello.objects.create(
+            prodotto=prodotto, carrello=carrello, quantita=1
+        )
+        self.assertEqual(elemento_carrello.prezzo, 10.00)
+
+    def test_quantita_elemento_carrello(self):
+        """
+        Verifica che la quantità dell'elemento del carrello sia corretta.
+        """
+        user = User.objects.create(username="test_user")
+        carrello = Carrello.objects.create(user=user)
+        prodotto = Prodotto.objects.create(nome="Prodotto 1", prezzo=10.00)
+        elemento_carrello = ElementoCarrello.objects.create(
+            prodotto=prodotto, carrello=carrello, quantita=1
+        )
+        self.assertEqual(elemento_carrello.quantita, 1)
+
+
+class OrdineTests(TestCase):
+    def setUp(self) :
+        self.user = User.objects.create(username="test_user")
+        self.carrello = Carrello.objects.create(user=self.user)
+        self.prodotto = Prodotto.objects.create(nome="Prodotto 1", prezzo=10.00)
+        self.elemento_carrello = ElementoCarrello.objects.create(
+            prodotto=self.prodotto, carrello=self.carrello, quantita=1
+        )
+        self.ordine = Ordine.objects.create(
+            user=self.user,
+            nome="Nome",
+            cognome="Cognome",
+            email="Email@mail.it",
+            indirizzo="Indirizzo",
+            stato="IT",
+            citta="Citta",
+            regione="Regione",
+            provincia="Provincia",
+            codice_postale="12345",
+            modalita_pagamento="Carta di credito")
+        self.ordine.prodotti.add(self.prodotto)
+
+    def test_creazione_ordine(self):
+        """
+        Verifica che sia possibile creare un nuovo ordine.
+        """
+        self.assertNotEqual(self.ordine.id, None)
+        self.assertEqual(self.ordine.user, self.user)
+        self.assertEqual(self.ordine.nome, "Nome")
+        self.assertEqual(self.ordine.cognome, "Cognome")
+        self.assertEqual(self.ordine.email, "Email@mail.it")
+        self.assertEqual(self.ordine.indirizzo, "Indirizzo")
+        self.assertEqual(self.ordine.stato, "IT")
+        self.assertEqual(self.ordine.citta, "Citta")
+        self.assertEqual(self.ordine.regione, "Regione")
+        self.assertEqual(self.ordine.provincia, "Provincia")
+        self.assertEqual(self.ordine.codice_postale, "12345")
+        self.assertEqual(self.ordine.modalita_pagamento, "Carta di credito")
+
+    def test_prezzo_complessivo_ordine(self):
+        """
+        Verifica che il prezzo complessivo dell'ordine sia corretto.
+        """
+        #self.assertEqual(self.ordine.prezzo_complessivo_ordine, 10.00)
+
+    def test_numero_elementi(self):
+        """
+        Verifica che il numero di elementi nell'ordine sia corretto.
+        """
+        #self.assertEqual(self.ordine.numero_elementi, 1)
+        
+
+
     
 
 #Unit test for Register page view
