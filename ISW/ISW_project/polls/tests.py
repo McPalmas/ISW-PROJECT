@@ -141,12 +141,16 @@ class OrdineTests(TestCase):
         Verifica che il prezzo complessivo dell'ordine sia corretto.
         """
         #self.assertEqual(self.ordine.prezzo_complessivo_ordine, 10.00)
+         #fallisce perchè non funziona carrello.numero_elementi
+
 
     def test_numero_elementi(self):
         """
         Verifica che il numero di elementi nell'ordine sia corretto.
         """
         #self.assertEqual(self.ordine.numero_elementi, 1)
+        #fallisce perchè non funziona carrello.numero_elementi
+
         
 
 
@@ -273,4 +277,67 @@ class ClientHomepageViewTest(TestCase):
         self.assertContains(response, 'Prodotto di test2')
 
 
-   
+#unit test for Chart list view
+class CarrelloViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.prodotto1 = Prodotto.objects.create(id=100,nome='Prodotto di test', descrizione='Descrizione di test', prezzo=10.00)
+        self.prodotto2 = Prodotto.objects.create(id=101,nome='Prodotto di test2', descrizione='Descrizione di test2', prezzo=20.00)
+
+    def test_user_not_logged(self):
+        response = self.client.get('/carrello/')
+        self.assertEqual(response.status_code, 302)
+        #fallisce perchè non funziona carrello.numero_elementi
+
+    def test_page_exist(self):
+        self.client.login(username='testuser', password='testpassword')
+        response = self.client.get('/carrello/')
+        self.assertEqual(response.status_code, 200)
+    
+    def test_carrello_caricato_correttamente(self):
+        self.client.login(username='testuser', password='testpassword')
+        carrello = Carrello.objects.create(user=self.user)
+        elemento_carrello_1 = ElementoCarrello.objects.create(
+            carrello=carrello, prodotto=self.prodotto1, quantita=1
+        )
+        elemento_carrello_2 = ElementoCarrello.objects.create(
+            carrello=carrello, prodotto=self.prodotto2, quantita=2
+        )
+        response = self.client.get('/carrello/')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Prodotto di test')
+        self.assertContains(response, 'Prodotto di test2')
+
+    def test_carrello_vuoto(self):
+        self.client.login(username='testuser', password='testpassword')
+        response = self.client.get('/carrello/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_modifica_quantià_prodotto(self):
+        self.client.login(username='testuser', password='testpassword')
+        carrello = Carrello.objects.create(user=self.user)
+        elemento_carrello_1 = ElementoCarrello.objects.create(
+            carrello=carrello, prodotto=self.prodotto1, quantita=1
+        )
+        response = self.client.get('/increase_quantity/100/')
+        self.assertEqual(response.status_code, 302)
+
+        element = ElementoCarrello.objects.get(carrello = carrello, prodotto = self.prodotto1)
+        self.assertEqual(element.quantita, 2)
+
+        response = self.client.get('/decrease_quantity/100/')
+        self.assertEqual(response.status_code, 302)
+        element = ElementoCarrello.objects.get(carrello = carrello, prodotto = self.prodotto1)
+        self.assertEqual(element.quantita, 1)
+
+    def test_rimozione_elemento_carrello(self):
+        self.client.login(username='testuser', password='testpassword')
+        carrello = Carrello.objects.create(user=self.user)
+        elemento_carrello_1 = ElementoCarrello.objects.create(
+            carrello=carrello, prodotto=self.prodotto1, quantita=1
+        )
+        response = self.client.get('/remove_product/100/')
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(carrello.numero_elementi, 0)
+
+    
