@@ -65,17 +65,15 @@ class Ordine(models.Model):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.elementiOrdine = None
+        self.elementiOrdine = []
 
     def __str__(self):
         return str(self.id)
 
     @property
     def prezzo_complessivo_ordine(self):
-        elementi_ordine = self.elementiOrdine.all()
-        return sum(elemento.prezzo for elemento in elementi_ordine)
+        return sum(elemento.prezzo for elemento in self.elementiOrdine)
 
     @property
     def numero_elementi(self):
-        elementi_ordine = self.elementiOrdine.all()
-        return sum(elemento.quantita for elemento in elementi_ordine)
+        return sum(elemento.quantita for elemento in self.elementiOrdine)

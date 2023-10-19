@@ -127,6 +127,8 @@ def carrello(request):
     if request.user.is_authenticated:
         carrello, creato = Carrello.objects.get_or_create(user=request.user, completato=False)
         elementiCarrello = carrello.elementiCarrello.all()
+    else:
+        return redirect('login')
 
     if carrello.numero_elementi == 0:
         context = {"carrello": carrello, "elementiCarrello": elementiCarrello}
