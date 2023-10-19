@@ -140,16 +140,14 @@ class OrdineTests(TestCase):
         """
         Verifica che il prezzo complessivo dell'ordine sia corretto.
         """
-        #self.assertEqual(self.ordine.prezzo_complessivo_ordine, 10.00)
-         #fallisce perchè non funziona carrello.numero_elementi
+        self.assertEqual(self.ordine.prezzo_complessivo_ordine, 10.00)
 
 
     def test_numero_elementi(self):
         """
         Verifica che il numero di elementi nell'ordine sia corretto.
         """
-        #self.assertEqual(self.ordine.numero_elementi, 1)
-        #fallisce perchè non funziona carrello.numero_elementi
+        self.assertEqual(self.ordine.numero_elementi, 1)
 
         
 
@@ -287,7 +285,6 @@ class CarrelloViewTest(TestCase):
     def test_user_not_logged(self):
         response = self.client.get('/carrello/')
         self.assertEqual(response.status_code, 302)
-        #fallisce perchè non funziona carrello.numero_elementi
 
     def test_page_exist(self):
         self.client.login(username='testuser', password='testpassword')
