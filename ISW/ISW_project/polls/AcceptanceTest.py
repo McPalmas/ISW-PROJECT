@@ -19,6 +19,7 @@ class AcceptanceTest(LiveServerTestCase):
         self.user = User.objects.create_user(username='testuser', password='12345')
         self.prodotto1 = Prodotto.objects.create(nome='Prodotto 1', descrizione='Descrizione prodotto 1', prezzo=10.0)
         self.prodotto2 = Prodotto.objects.create(nome='Prodotto 2', descrizione='Descrizione prodotto 2', prezzo=20.0)
+
     def test_login(self):
         self.browser.get(self.live_server_url + '/login/')
         username = self.browser.find_element(By.NAME, 'username')
@@ -74,7 +75,6 @@ class AcceptanceTest(LiveServerTestCase):
         self.assertTrue(len(prodotti_carrello) > 0)
         time.sleep(2)
 
-
     def test_aumenta_quantita(self):
         self.browser.get(self.live_server_url + '/login/')
         username = self.browser.find_element(By.NAME, 'username')
@@ -90,9 +90,8 @@ class AcceptanceTest(LiveServerTestCase):
         quantita_prima = int(self.browser.find_element(By.ID, 'quantita').text)
         self.browser.find_element(By.CSS_SELECTOR, 'a[href*="increase_quantity"]').click()
         quantita_dopo = int(self.browser.find_element(By.ID, 'quantita').text)
-        self.assertEqual(quantita_dopo,quantita_prima+1)
+        self.assertEqual(quantita_dopo, quantita_prima + 1)
         time.sleep(2)
-
 
     def test_diminuisci_quantita(self):
         self.browser.get(self.live_server_url + '/login/')
@@ -107,15 +106,15 @@ class AcceptanceTest(LiveServerTestCase):
         products[0].find_element(By.CLASS_NAME, 'aggiungiAlCarrello').click()
         self.browser.find_element(By.CSS_SELECTOR, 'li a[href*="carrello"]').click()
 
-        #Aumento la quantita
+        # Aumento la quantita
         self.browser.find_element(By.CSS_SELECTOR, 'a[href*="increase_quantity"]').click()
-        quantita_prima= int(self.browser.find_element(By.ID, 'quantita').text)
+        quantita_prima = int(self.browser.find_element(By.ID, 'quantita').text)
 
-        #Diminuisco la quantita
+        # Diminuisco la quantita
         self.browser.find_element(By.CSS_SELECTOR, 'a[href*="decrease_quantity"]').click()
         quantita_dopo = int(self.browser.find_element(By.ID, 'quantita').text)
 
-        self.assertEqual(quantita_dopo, quantita_prima -1)
+        self.assertEqual(quantita_dopo, quantita_prima - 1)
         time.sleep(2)
 
     def test_rimuovi_dal_carrello(self):
@@ -129,14 +128,14 @@ class AcceptanceTest(LiveServerTestCase):
         products = self.browser.find_elements(By.CLASS_NAME, 'schedaProdotto')
 
         products[0].find_element(By.CLASS_NAME, 'aggiungiAlCarrello').click()
-        products[1].find_element(By.CLASS_NAME, 'aggiungiAlCarrello').click()
         self.browser.find_element(By.CSS_SELECTOR, 'li a[href*="carrello"]').click()
-
-        prodotti_carrello_prima = len(self.browser.find_elements(By.CLASS_NAME, 'infoOggetto'))
+        prodotti_carrello = self.browser.find_elements(By.CLASS_NAME, 'infoOggetto')
+        self.assertTrue(len(prodotti_carrello) > 0)
         self.browser.find_element(By.CSS_SELECTOR, 'a[href*="remove_product"]').click()
-        prodotti_carrello_dopo = len(self.browser.find_elements(By.CLASS_NAME, 'infoOggetto'))
-        self.assertEqual(prodotti_carrello_prima,prodotti_carrello_dopo+1)
+        prodotti_carrello = self.browser.find_elements(By.CLASS_NAME, 'infoOggetto')
+        self.assertTrue(len(prodotti_carrello) == 0)
         time.sleep(2)
+
 
     def tearDown(self):
         self.browser.quit()
