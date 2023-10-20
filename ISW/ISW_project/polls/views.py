@@ -1,13 +1,11 @@
 from django.contrib.auth import login
-from django.db.models import Sum
 from django.shortcuts import render, redirect
-from django.views import View
 from django.views.generic import FormView
 from .models import *
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .forms import RegisterForm, CheckoutForm, OrdineForm
+from .forms import RegisterForm
 from django.contrib.auth.decorators import login_required
 
 
@@ -54,70 +52,6 @@ class RegisterView(FormView):
 
         messages.success(self.request, 'Account created successfully!')
         return super(RegisterView, self).form_valid(form)
-
-"""
-class CheckoutView(View):
-    context = {}
-
-    def get(self, request):
-        form = OrdineForm()
-        carr = Carrello.objects.get(user=request.user, completato=False)
-
-        self.context['prezzo_totale'] = carr.prezzo_complessivo_carrello
-        self.context['numero_elementi'] = carr.numero_elementi
-        self.context['form'] = form
-        return render(self.request, 'polls/Checkout.html', self.context)
-
-    def post(self, request):
-        carr = Carrello.objects.get(user=request.user, completato=False)
-        form = OrdineForm(request.POST)
-        if form.is_valid():
-            instance = form.save(commit=False)
-            instance.user = request.user
-            instance.save()
-
-            for prodotto in carr:
-                instance.prodotti.add(prodotto)
-
-        self.context['form'] = form
-        self.context['products'] = Ordine.objects.all()
-        Carrello.objects.all().delete()
-        return render(self.request, 'polls/carrello.html', self.context)
-"""
-
-
-class CheckoutView(View):
-    context = {}
-
-    def get(self, request):
-        form = OrdineForm(request.GET or None)
-        carrello = Carrello.objects.get(user=request.user, completato=False)
-
-        self.context['prezzo_totale'] = carrello.prezzo_complessivo_carrello
-        self.context['numero_elementi'] = carrello.numero_elementi
-        self.context['form'] = form
-        return render(self.request, 'polls/Checkout.html', self.context)
-
-    def post(self, request):
-        carrello = Carrello.objects.all()
-        form = OrdineForm(request.POST or None)
-
-        if form.is_valid():
-            instance = form.save(commit=False)
-            instance.user = request.user
-            instance.save()
-
-            for elemento in carrello.elementiCarrello.all():
-                instance.prodotti.add(elemento.prodotto)
-
-            # Ora che l'ordine è registrato, segnala il carrello come completato e svuotalo
-            carrello.completato = True
-            carrello.save()
-
-        self.context['form'] = form
-        self.context['order'] = Ordine.objects.all()
-        Carrello.objects.all().delete()
-        return render(self.request, 'polls/Carrello.html', self.context)
 
 
 def carrello(request):
@@ -193,4 +127,43 @@ def increase_quantity(request, id):
         elemento.save()
 
     return redirect('carrello')
+
+
+def ordine(request):
+    if request.method == "POST":
+        nome = request.POST["nome"]
+        cognome = request.POST["cognome"]
+        email = request.POST["email"]
+        indirizzo = request.POST["indirizzo"]
+        citta = request.POST["citta"]
+        regione = request.POST["regione"]
+        provincia = request.POST["provincia"]
+        stato = request.POST["stato"]
+        codice_postale = request.POST["codice_postale"]
+        nome_carta = request.POST["nome_carta"]
+        numero_carta = request.POST["numero_carta"]
+        scadenza = request.POST["scadenza"]
+        cvv = request.POST["cvv"]
+        pagamento = Pagamento(user=request.user, nome_carta=nome_carta, numero_carta=numero_carta, scadenza=scadenza, cvv=cvv)
+        pagamento.save()
+        carrello = Carrello.objects.get(user=request.user, completato=False)
+        for elemento_carrello in carrello.elementiCarrello.all():
+            elemento_ordine = ElementoOrdine(nome=elemento_carrello.prodotto.nome,
+                                               descrizione=elemento_carrello.prodotto.descrizione,
+                                               prezzo=elemento_carrello.prodotto.prezzo, categoria=elemento_carrello.prodotto.categoria)
+            elemento_ordine.save()
+
+        ordine = Ordine(user=request.user, nome=nome, cognome=cognome, email=email, indirizzo=indirizzo, stato=stato,
+                        citta=citta, regione=regione, provincia=provincia, codice_postale=codice_postale,
+                        pagamento=pagamento, elemento_ordine=elemento_ordine)
+        ordine.save()
+        Carrello.objects.all().delete()
+        return render(request, "polls/Carrello.html")
+    else:
+        carrello, creato = Carrello.objects.get_or_create(user=request.user, completato=False)
+        numero_elementi = carrello.elementiCarrello.all().count() * carrello.numero_elementi
+        prezzo_totale = carrello.prezzo_complessivo_carrello
+        return render(request, "polls/Checkout.html", {'numero_elementi': numero_elementi, 'prezzo_totale': prezzo_totale})
+
+
 

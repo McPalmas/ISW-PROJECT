@@ -2,9 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 import uuid
 
-from django_countries.fields import CountryField
-
-
 class Prodotto(models.Model):
     nome = models.TextField(max_length=250)
     descrizione = models.TextField(max_length=400)
@@ -49,19 +46,37 @@ class ElementoCarrello(models.Model):
         return self.prodotto.prezzo * self.quantita
 
 
-class Ordine(models.Model):
+class Pagamento(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    nome_carta = models.TextField(null=False)
+    numero_carta = models.IntegerField(null=False)
+    scadenza = models.DateField(null=False)
+    cvv = models.IntegerField(null=False)
+
+
+class ElementoOrdine(models.Model):
+    nome = models.TextField(max_length=250)
+    descrizione = models.TextField(max_length=400)
+    prezzo = models.DecimalField(max_digits=10, decimal_places=2)
+    categoria = models.TextField(max_length=250)
+
+    def __str__(self):
+        return str(self.nome)
+
+
+class Ordine(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     nome = models.TextField(max_length=150, null=False)
     cognome = models.TextField(max_length=150, null=False)
     email = models.EmailField(max_length=254, null=False)
     indirizzo = models.TextField(max_length=254, null=False)
-    stato = CountryField(blank=True, blank_label='(Seleziona il paese)', null=False)
+    stato = models.TextField(max_length=254, null=False)
     citta = models.TextField(max_length=150, null=False)
     regione = models.TextField(max_length=150, null=False)
     provincia = models.TextField(max_length=150, null=False)
     codice_postale = models.TextField(max_length=10, null=False)
-    modalita_pagamento = models.TextField(max_length=150, null=False)
-    prodotti = models.ManyToManyField(Prodotto)
+    pagamento = models.OneToOneField(Pagamento, on_delete=models.CASCADE, null=False, default=1)
+    elemento_ordine = models.ForeignKey(ElementoOrdine, on_delete=models.CASCADE, null=False, default = 2)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -1,5 +1,4 @@
 {% load static %}
-{% load crispy_forms_tags %}
 
 <!DOCTYPE html>
 
@@ -26,56 +25,54 @@
         <div class="row">
               <div class="col-75">
                 <div class="container">
-                  <form method="POST">
+                  <form action="/ordine" method="post">
                     {% csrf_token %}
                     <div class="row">
                       <div class="col-50">
                         <h3> Dati Spedizione </h3>
-                        <label for="nome"><i class="fa fa-user"></i> Nome </label>
-                          {{ form.nome }}
-                          <label for="cognome"><i class="fa fa-envelope"></i> Cognome </label>
-                          {{ form.cognome }}
-                        <label for="email"><i class="fa fa-envelope"></i> Email </label>
-                          {{ form.email }}
-                        <label for="adr"><i class="fa fa-address-card-o"></i> Indirizzo </label>
-                          {{ form.indirizzo }}
-                        <label for="city"><i class="fa fa-institution"></i> Citta </label>
-                          {{ form.citta }}
-                          <label for="regione"><i class="fa fa-institution"></i> Regione </label>
-                          {{ form.regione }}
-                          <label for="provincia"><i class="fa fa-institution"></i> Provincia </label>
-                          {{ form.provincia }}
+                        <label for="nome"> Nome </label>
+                          <input type="text" id="nome" name="nome">
+                          <label for="cognome"> Cognome </label>
+                          <input type="text" id="cognome" name="cognome">
+                        <label for="email"> Email </label>
+                          <input type="email" id="email" name="email">
+                        <label for="indirizzo"> Indirizzo </label>
+                          <input type="text" id="indirizzo" name="indirizzo">
+                        <label for="citta"> Citta </label>
+                          <input type="text" id="citta" name="citta">
+                          <label for="regione"> Regione </label>
+                          <input type="text" id="regione" name="regione">
+                          <label for="provincia"> Provincia </label>
+                          <input type="text" id="provincia" name="provincia">
 
                         <div class="row">
                           <div class="col-50">
-                            <label for="state"> Stato </label>
-                              {{ form.stato }}
+                            <label for="stato"> Stato </label>
+                              <input type="text" id="stato" name="stato">
                           </div>
                             <br/>
                           <div class="col-50">
-                            <label for="zip"> Codice Postale </label>
-                            {{ form.codice_postale }}
+                            <label for="codice_postale"> Codice Postale </label>
+                            <input type="number" id="codice_postale" name="codice_postale">
                           </div>
                         </div>
                       </div>
 
                       <div class="col-50">
                         <h3> Pagamento </h3>
-                        <label for="cname"> Nome sulla carta </label>
-                        <input type="text" id="cname" name="cardname">
-                        <label for="ccnum"> Numero Carta </label>
-                        <input type="text" id="ccnum" name="cardnumber">
-                        <label for="expmonth"> Mese Scadenza </label>
-                        <input type="text" id="expmonth" name="expmonth">
+                        <label for="nome_carta"> Nome sulla carta </label>
+                        <input type="text" id="nome_carta" name="nome_carta">
+                        <label for="numero_carta"> Numero Carta </label>
+                        <input type="number" id="numero_carta" name="numero_carta">
 
                         <div class="row">
                           <div class="col-50">
-                            <label for="expyear"> Anno Scadenza </label>
-                            <input type="text" id="expyear" name="expyear">
+                            <label for="scadenza"> Scadenza </label>
+                            <input type="date" id="scadenza" name="scadenza">
                           </div>
                           <div class="col-50">
                             <label for="cvv"> CVV </label>
-                            <input type="text" id="cvv" name="cvv">
+                            <input type="number" id="cvv" name="cvv">
                           </div>
                         </div>
                       </div>
