@@ -161,7 +161,7 @@ def ordine(request):
         return render(request, "polls/Carrello.html")
     else:
         carrello, creato = Carrello.objects.get_or_create(user=request.user, completato=False)
-        numero_elementi = carrello.elementiCarrello.all().count() * carrello.numero_elementi
+        numero_elementi =  carrello.numero_elementi
         prezzo_totale = carrello.prezzo_complessivo_carrello
         return render(request, "polls/Checkout.html", {'numero_elementi': numero_elementi, 'prezzo_totale': prezzo_totale})
 
