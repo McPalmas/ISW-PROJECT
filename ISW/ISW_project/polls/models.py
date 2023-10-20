@@ -65,7 +65,7 @@ class ElementoOrdine(models.Model):
 
 
 class Ordine(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     nome = models.TextField(max_length=150, null=False)
     cognome = models.TextField(max_length=150, null=False)
     email = models.EmailField(max_length=254, null=False)
