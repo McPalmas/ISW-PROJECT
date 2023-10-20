@@ -96,62 +96,53 @@ class ElementoCarrelloTests(TestCase):
         )
         self.assertEqual(elemento_carrello.quantita, 1)
 
+class PagamentoTests(TestCase):
+    def setUp(self):
+        self.testUser = User.objects.create_user(username='testuser', password='testpassword')
+   
+    def test_creazione_pagamento(self):
+        testPagamento = Pagamento.objects.create(user=self.testUser, nome_carta='test', numero_carta=123456789, scadenza='2021-01-01', cvv=123)
+        self.assertEqual(testPagamento.user, self.testUser)
+        self.assertEqual(testPagamento.nome_carta, 'test')
+        self.assertEqual(testPagamento.numero_carta, 123456789)
+        self.assertEqual(testPagamento.scadenza, '2021-01-01')
+        self.assertEqual(testPagamento.cvv, 123)
+
+class ElementoOrdineTests(TestCase):
+    def setUp(self):
+        self.testElementoOrdine = ElementoOrdine.objects.create(nome='test', descrizione='test', prezzo=10.00, categoria='test')
+
+    def test_creazione_elemento_ordine(self):
+        self.assertEqual(self.testElementoOrdine.nome, 'test')
+        self.assertEqual(self.testElementoOrdine.descrizione, 'test')
+        self.assertEqual(self.testElementoOrdine.prezzo, 10.00)
+        self.assertEqual(self.testElementoOrdine.categoria, 'test')
 
 class OrdineTests(TestCase):
-    def setUp(self) :
-        self.user = User.objects.create(username="test_user")
-        self.carrello = Carrello.objects.create(user=self.user)
-        self.prodotto = Prodotto.objects.create(nome="Prodotto 1", prezzo=10.00)
-        self.elemento_carrello = ElementoCarrello.objects.create(
-            prodotto=self.prodotto, carrello=self.carrello, quantita=1
-        )
-        self.ordine = Ordine.objects.create(
-            user=self.user,
-            nome="Nome",
-            cognome="Cognome",
-            email="Email@mail.it",
-            indirizzo="Indirizzo",
-            stato="IT",
-            citta="Citta",
-            regione="Regione",
-            provincia="Provincia",
-            codice_postale="12345",
-            modalita_pagamento="Carta di credito")
-        self.ordine.prodotti.add(self.prodotto)
-
-    def test_creazione_ordine(self):
-        """
-        Verifica che sia possibile creare un nuovo ordine.
-        """
-        self.assertNotEqual(self.ordine.id, None)
-        self.assertEqual(self.ordine.user, self.user)
-        self.assertEqual(self.ordine.nome, "Nome")
-        self.assertEqual(self.ordine.cognome, "Cognome")
-        self.assertEqual(self.ordine.email, "Email@mail.it")
-        self.assertEqual(self.ordine.indirizzo, "Indirizzo")
-        self.assertEqual(self.ordine.stato, "IT")
-        self.assertEqual(self.ordine.citta, "Citta")
-        self.assertEqual(self.ordine.regione, "Regione")
-        self.assertEqual(self.ordine.provincia, "Provincia")
-        self.assertEqual(self.ordine.codice_postale, "12345")
-        self.assertEqual(self.ordine.modalita_pagamento, "Carta di credito")
-
-    def test_prezzo_complessivo_ordine(self):
-        """
-        Verifica che il prezzo complessivo dell'ordine sia corretto.
-        """
-        self.assertEqual(self.ordine.prezzo_complessivo_ordine, 10.00)
-
-
-    def test_numero_elementi(self):
-        """
-        Verifica che il numero di elementi nell'ordine sia corretto.
-        """
-        self.assertEqual(self.ordine.numero_elementi, 1)
-
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.prodotto = Prodotto.objects.create(nome='test', descrizione='test', prezzo=10.00)
+        self.pagamento = Pagamento.objects.create(user=self.user, nome_carta='test', numero_carta=123456789, scadenza='2021-01-01', cvv=123)
+        self.elemento_ordine = ElementoOrdine.objects.create(nome='test', descrizione='test', prezzo=10.00, categoria='test')
+        self.elemento_ordine2 = ElementoOrdine.objects.create(nome='test', descrizione='test', prezzo=20.00, categoria='test')
+        self.elemento_ordine3 = ElementoOrdine.objects.create(nome='test', descrizione='test', prezzo=30.00, categoria='test')
+        self.elemento_ordine.save()
+        self.elemento_ordine2.save()
+        self.elemento_ordine3.save()
         
-
-
+    def test_creazione_ordine(self):
+        testOrdine = Ordine.objects.create(user=self.user, nome='test', cognome='test',email = 'test@mail.it',indirizzo='test', stato='test', citta='test', regione='test', provincia='test', codice_postale='test', pagamento=self.pagamento, elemento_ordine=self.elemento_ordine)
+        self.assertEqual(testOrdine.user, self.user)
+        self.assertEqual(testOrdine.nome, 'test')
+        self.assertEqual(testOrdine.cognome, 'test')
+        self.assertEqual(testOrdine.email, 'test@mail.it')
+        self.assertEqual(testOrdine.indirizzo, 'test')
+        self.assertEqual(testOrdine.stato, 'test')
+        self.assertEqual(testOrdine.citta, 'test')
+        self.assertEqual(testOrdine.regione, 'test')
+        self.assertEqual(testOrdine.provincia, 'test')
+        self.assertEqual(testOrdine.codice_postale, 'test')
+        self.assertEqual(testOrdine.pagamento, self.pagamento)
     
 
 #Unit test for Register page view
@@ -337,4 +328,40 @@ class CarrelloViewTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(carrello.numero_elementi, 0)
 
-    
+class checkoutViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.prodotto1 = Prodotto.objects.create(id=100,nome='Prodotto di test', descrizione='Descrizione di test', prezzo=10.00)
+        self.prodotto2 = Prodotto.objects.create(id=101,nome='Prodotto di test2', descrizione='Descrizione di test2', prezzo=20.00)
+        self.carrello = Carrello.objects.create(user=self.user)
+        self.elemento_carrello_1 = ElementoCarrello.objects.create(
+            carrello=self.carrello, prodotto=self.prodotto1, quantita=1
+        )
+        self.elemento_carrello_2 = ElementoCarrello.objects.create(
+            carrello=self.carrello, prodotto=self.prodotto2, quantita=2
+        )
+        self.pagamento = Pagamento.objects.create(user=self.user, nome_carta='test', numero_carta=123456789, scadenza='2021-01-01', cvv=123)
+
+    def test_ordine_get(self):
+        self.client.login(username='testuser', password='testpassword')
+        response = self.client.get('/ordine')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'polls/Checkout.html')
+
+    def test_ordine_post(self):
+        self.client.login(username='testuser', password='testpassword')
+        response = self.client.post('/ordine', {'nome': 'test',
+                                                    'cognome': 'test',
+                                                    'email': 'test@mail.it',
+                                                    'indirizzo': 'test',
+                                                    'stato': 'test',
+                                                    'citta': 'test',
+                                                    'regione': 'test',
+                                                    'provincia': 'test',
+                                                    'codice_postale': 'test',
+                                                    'nome_carta': 'test',
+                                                    'numero_carta': 123456789,
+                                                    'scadenza': '2021-01-01',
+                                                    'cvv': 123})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'polls/Carrello.html')
