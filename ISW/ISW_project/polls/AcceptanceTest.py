@@ -17,7 +17,7 @@ class AcceptanceTest(LiveServerTestCase):
         self.user = User.objects.create_user(username='testuser', password='12345')
         self.prodotto1 = Prodotto.objects.create(nome='Prodotto 1', descrizione='Descrizione prodotto 1', prezzo=10.0)
         self.prodotto2 = Prodotto.objects.create(nome='Prodotto 2', descrizione='Descrizione prodotto 2', prezzo=20.0)
-    '''
+
     def test_login(self):
         self.browser.get(self.live_server_url + '/login/')
         username = self.browser.find_element(By.NAME, 'username')
@@ -133,7 +133,7 @@ class AcceptanceTest(LiveServerTestCase):
         prodotti_carrello = self.browser.find_elements(By.CLASS_NAME, 'infoOggetto')
         self.assertTrue(len(prodotti_carrello) == 0)
         time.sleep(2)
-    '''
+    
     def test_ordine(self):
         self.browser.get(self.live_server_url + '/login/')
         username = self.browser.find_element(By.NAME, 'username')
