@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import *
 
-admin.site.register([Carrello, ElementoCarrello ])
 
 @admin.register(Prodotto)
 class ProdottoAdmin(admin.ModelAdmin):
@@ -12,6 +11,12 @@ class ProdottoAdmin(admin.ModelAdmin):
 @admin.register(Ordine)
 class OrdineAdmin(admin.ModelAdmin):
     list_display = ['user', 'nome', 'cognome', 'email', 'prezzo_complessivo_ordine']
-    list_filter = ['user']
+    list_filter = ['user',]
     search_fields = ['user', 'nome', 'cognome', 'email']
     ordering = ['-id']
+
+@admin.register(ElementoOrdine)
+class OrdineAdmin(admin.ModelAdmin):
+    list_display = ['nome', 'descrizione', 'prezzo', 'categoria']
+    list_filter = ['nome','prezzo','categoria']
+    search_fields = ['nome', 'categoria']

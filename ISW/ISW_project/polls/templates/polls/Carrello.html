@@ -17,7 +17,7 @@
 <nav class="barraHome">
     <ul class="navItem">
         <li><a href="{% url 'home' %}"> Home </a></li>
-        <li><a href="{% url 'carrello' %}"> Carrello </a></li>
+        <li><a href="{% url 'shopping_cart' %}"> Carrello </a></li>
         <li><a href="{% url 'logout' %}"> Logout </a></li>
     </ul>
 </nav>
@@ -67,7 +67,7 @@
     {% if  elementiCarrello.count > 0 %}
     <div class="pagamento">
         <h3> Totale: {{carrello.prezzo_complessivo_carrello}} € </h3>
-        <a href="{% url 'ordine' %}"> Pagamento </a>
+        <a href="{% url 'order' %}"> Pagamento </a>
     </div>
     {% else %}
         <h3> Non ci sono elementi nel carrello </h3>

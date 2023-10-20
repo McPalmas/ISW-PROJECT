@@ -8,6 +8,10 @@ class Prodotto(models.Model):
     prezzo = models.DecimalField(max_digits=10, decimal_places=2)
     categoria = models.TextField(max_length=250)
 
+    class Meta:
+        verbose_name = "product"
+        verbose_name_plural = "products"
+
     def __str__(self):
         return str(self.nome)
 
@@ -38,6 +42,10 @@ class ElementoCarrello(models.Model):
     carrello = models.ForeignKey(Carrello, on_delete=models.CASCADE, related_name="elementiCarrello")
     quantita = models.IntegerField(default=0)
 
+    class Meta:
+        verbose_name = "CartProduct"
+        verbose_name_plural = "CartProducts"
+
     def __str__(self):
         return str(self.prodotto.nome)
 
@@ -60,6 +68,10 @@ class ElementoOrdine(models.Model):
     prezzo = models.DecimalField(max_digits=10, decimal_places=2)
     categoria = models.TextField(max_length=250)
 
+    class Meta:
+        verbose_name = "Sold Product"
+        verbose_name_plural = "Sold Products"
+
     def __str__(self):
         return str(self.nome)
 
@@ -77,6 +89,10 @@ class Ordine(models.Model):
     codice_postale = models.TextField(max_length=10, null=False)
     pagamento = models.OneToOneField(Pagamento, on_delete=models.CASCADE, null=False, default=1)
     elemento_ordine = models.OneToOneField(ElementoOrdine, null=False, on_delete=models.CASCADE, default=1)
+
+    class Meta:
+        verbose_name = "Order"
+        verbose_name_plural = "Orders"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
