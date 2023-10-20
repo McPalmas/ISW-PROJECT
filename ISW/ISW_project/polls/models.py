@@ -76,19 +76,19 @@ class Ordine(models.Model):
     provincia = models.TextField(max_length=150, null=False)
     codice_postale = models.TextField(max_length=10, null=False)
     pagamento = models.OneToOneField(Pagamento, on_delete=models.CASCADE, null=False, default=1)
-    elemento_ordine = models.ForeignKey(ElementoOrdine, on_delete=models.CASCADE, null=False, default = 2)
+    elemento_ordine = models.ManyToManyField(ElementoOrdine, null=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.elementiOrdine = []
+        self.elementiOrdine = ElementoOrdine.objects.all()
 
     def __str__(self):
         return str(self.id)
 
     @property
     def prezzo_complessivo_ordine(self):
-        return sum(elemento.prezzo for elemento in self.elementiOrdine)
+        return sum(oggetto.prezzo for oggetto in self.elementiOrdine)
 
     @property
     def numero_elementi(self):
-        return sum(elemento.quantita for elemento in self.elementiOrdine)
+        return sum(elemento.quantita for elemento in self.elementiOrdine.count())
