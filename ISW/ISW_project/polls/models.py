@@ -76,7 +76,7 @@ class Ordine(models.Model):
     provincia = models.TextField(max_length=150, null=False)
     codice_postale = models.TextField(max_length=10, null=False)
     pagamento = models.OneToOneField(Pagamento, on_delete=models.CASCADE, null=False, default=1)
-    elemento_ordine = models.ManyToManyField(ElementoOrdine, null=False)
+    elemento_ordine = models.OneToOneField(ElementoOrdine, null=False, on_delete=models.CASCADE, default=1)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
