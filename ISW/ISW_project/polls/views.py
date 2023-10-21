@@ -50,7 +50,6 @@ class RegisterView(FormView):
         if user:
             login(self.request, user)
 
-        messages.success(self.request, 'Account created successfully!')
         return super(RegisterView, self).form_valid(form)
 
 
@@ -97,7 +96,7 @@ def remove_product(request, id):
 
     num_elementi_carrello = carrello.numero_elementi
 
-    return redirect('carrello')
+    return redirect('shopping_cart')
 
 
 def decrease_quantity(request, id):
@@ -113,7 +112,7 @@ def decrease_quantity(request, id):
         else:
             elemento.delete()
 
-    return redirect('carrello')
+    return redirect('shopping_cart')
 
 
 def increase_quantity(request, id):
@@ -126,7 +125,7 @@ def increase_quantity(request, id):
         elemento.quantita += 1
         elemento.save()
 
-    return redirect('carrello')
+    return redirect('shopping_cart')
 
 
 def order(request):
@@ -167,12 +166,13 @@ def order(request):
 
         carr = Carrello.objects.get(user=request.user, completato=False)
         for elemento_carrello in carr.elementiCarrello.all():
-            elemento_ordine = ElementoOrdine(nome=elemento_carrello.prodotto.nome,
+            for i in range(elemento_carrello.quantita):
+                elemento_ordine = ElementoOrdine(nome=elemento_carrello.prodotto.nome,
                                              descrizione=elemento_carrello.prodotto.descrizione,
                                              prezzo=elemento_carrello.prodotto.prezzo,
                                              categoria=elemento_carrello.prodotto.categoria,
                                              ordine=ordine)
-            elemento_ordine.save()
+                elemento_ordine.save()
         Carrello.objects.all().delete()
         return render(request, "polls/Carrello.html")
     else:

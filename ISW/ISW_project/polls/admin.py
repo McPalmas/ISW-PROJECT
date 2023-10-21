@@ -18,7 +18,7 @@ class OrdineAdmin(admin.ModelAdmin):
 
 
 @admin.register(ElementoOrdine)
-class OrdineAdmin(admin.ModelAdmin):
+class ElementoOrdineAdmin(admin.ModelAdmin):
     list_display = ['nome', 'descrizione', 'prezzo', 'categoria', 'ordine']
     list_filter = ['nome','prezzo','categoria']
     search_fields = ['nome', 'categoria']
