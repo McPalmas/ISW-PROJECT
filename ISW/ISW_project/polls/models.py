@@ -80,16 +80,16 @@ class Ordine(models.Model):
         verbose_name = "Order"
         verbose_name_plural = "Orders"
 
+    def __str__(self):
+        return str(self.id)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.elementiOrdine = ElementoOrdine.objects.all()
 
-    def __str__(self):
-        return str(self.id)
-
     @property
     def prezzo_complessivo_ordine(self):
-        return sum(oggetto.prezzo for oggetto in self.elementiOrdine)
+        return sum(elemento.prezzo for elemento in self.elementoordine_set.all())
 
     @property
     def numero_elementi(self):
@@ -109,3 +109,4 @@ class ElementoOrdine(models.Model):
 
     def __str__(self):
         return str(self.nome)
+
