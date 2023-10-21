@@ -8,6 +8,7 @@ class ProdottoAdmin(admin.ModelAdmin):
     list_filter = ["descrizione","prezzo"]
     search_fields = ["nome"]
 
+
 @admin.register(Ordine)
 class OrdineAdmin(admin.ModelAdmin):
     list_display = ['user', 'nome', 'cognome', 'email', 'prezzo_complessivo_ordine']
@@ -15,8 +16,9 @@ class OrdineAdmin(admin.ModelAdmin):
     search_fields = ['user', 'nome', 'cognome', 'email']
     ordering = ['-id']
 
+
 @admin.register(ElementoOrdine)
 class OrdineAdmin(admin.ModelAdmin):
-    list_display = ['nome', 'descrizione', 'prezzo', 'categoria']
+    list_display = ['nome', 'descrizione', 'prezzo', 'categoria', 'ordine']
     list_filter = ['nome','prezzo','categoria']
     search_fields = ['nome', 'categoria']

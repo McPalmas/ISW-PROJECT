@@ -17,9 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LogoutView
-from django.urls import include, path
-
+from django.urls import path
 from polls import views
+
 
 app_name = "polls"
 
@@ -37,5 +37,5 @@ urlpatterns = [
     path('remove_product/<int:id>/', views.remove_product, name="remove_product"),
     path('increase_quantity/<int:id>/', views.increase_quantity, name="increase_quantity"),
     path('decrease_quantity/<int:id>/', views.decrease_quantity, name="decrease_quantity"),
-    path('order', views.ordine, name="order"),
+    path('order', views.order, name="order"),
 ]

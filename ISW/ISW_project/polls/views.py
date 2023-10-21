@@ -129,7 +129,7 @@ def increase_quantity(request, id):
     return redirect('carrello')
 
 
-def ordine(request):
+def order(request):
     if request.method == "POST":
         nome = request.POST["nome"]
         cognome = request.POST["cognome"]
@@ -144,26 +144,46 @@ def ordine(request):
         numero_carta = request.POST["numero_carta"]
         scadenza = request.POST["scadenza"]
         cvv = request.POST["cvv"]
-        pagamento = Pagamento(user=request.user, nome_carta=nome_carta, numero_carta=numero_carta, scadenza=scadenza, cvv=cvv)
-        pagamento.save()
-        carrello = Carrello.objects.get(user=request.user, completato=False)
-        for elemento_carrello in carrello.elementiCarrello.all():
-            elemento_ordine = ElementoOrdine(nome=elemento_carrello.prodotto.nome,
-                                               descrizione=elemento_carrello.prodotto.descrizione,
-                                               prezzo=elemento_carrello.prodotto.prezzo, categoria=elemento_carrello.prodotto.categoria)
-            elemento_ordine.save()
 
-        ordine = Ordine(user=request.user, nome=nome, cognome=cognome, email=email, indirizzo=indirizzo, stato=stato,
-                        citta=citta, regione=regione, provincia=provincia, codice_postale=codice_postale,
-                        pagamento=pagamento, elemento_ordine=elemento_ordine)
+        pagamento = Pagamento(user=request.user,
+                              nome_carta=nome_carta,
+                              numero_carta=numero_carta,
+                              scadenza=scadenza,
+                              cvv=cvv)
+        pagamento.save()
+
+        ordine = Ordine(user=request.user,
+                        nome=nome,
+                        cognome=cognome,
+                        email=email,
+                        indirizzo=indirizzo,
+                        stato=stato,
+                        citta=citta,
+                        regione=regione,
+                        provincia=provincia,
+                        codice_postale=codice_postale,
+                        pagamento=pagamento)
         ordine.save()
+
+        carr = Carrello.objects.get(user=request.user, completato=False)
+        for elemento_carrello in carr.elementiCarrello.all():
+            elemento_ordine = ElementoOrdine(nome=elemento_carrello.prodotto.nome,
+                                             descrizione=elemento_carrello.prodotto.descrizione,
+                                             prezzo=elemento_carrello.prodotto.prezzo,
+                                             categoria=elemento_carrello.prodotto.categoria,
+                                             ordine=ordine)
+            elemento_ordine.save()
         Carrello.objects.all().delete()
         return render(request, "polls/Carrello.html")
     else:
         carrello, creato = Carrello.objects.get_or_create(user=request.user, completato=False)
-        numero_elementi =  carrello.numero_elementi
+        numero_elementi = carrello.numero_elementi
         prezzo_totale = carrello.prezzo_complessivo_carrello
-        return render(request, "polls/Checkout.html", {'numero_elementi': numero_elementi, 'prezzo_totale': prezzo_totale})
+        context = {
+            'numero_elementi': numero_elementi,
+            'prezzo_totale': prezzo_totale
+        }
+        return render(request, "polls/Checkout.html", context)
 
 
 

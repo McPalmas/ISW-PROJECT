@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import uuid
 
+
 class Prodotto(models.Model):
     nome = models.TextField(max_length=250)
     descrizione = models.TextField(max_length=400)
@@ -62,20 +63,6 @@ class Pagamento(models.Model):
     cvv = models.IntegerField(null=False)
 
 
-class ElementoOrdine(models.Model):
-    nome = models.TextField(max_length=250)
-    descrizione = models.TextField(max_length=400)
-    prezzo = models.DecimalField(max_digits=10, decimal_places=2)
-    categoria = models.TextField(max_length=250)
-
-    class Meta:
-        verbose_name = "Sold Product"
-        verbose_name_plural = "Sold Products"
-
-    def __str__(self):
-        return str(self.nome)
-
-
 class Ordine(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     nome = models.TextField(max_length=150, null=False)
@@ -87,8 +74,7 @@ class Ordine(models.Model):
     regione = models.TextField(max_length=150, null=False)
     provincia = models.TextField(max_length=150, null=False)
     codice_postale = models.TextField(max_length=10, null=False)
-    pagamento = models.OneToOneField(Pagamento, on_delete=models.CASCADE, null=False, default=1)
-    elemento_ordine = models.OneToOneField(ElementoOrdine, null=False, on_delete=models.CASCADE, default=1)
+    pagamento = models.ForeignKey(Pagamento, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Order"
@@ -108,3 +94,18 @@ class Ordine(models.Model):
     @property
     def numero_elementi(self):
         return sum(elemento.quantita for elemento in self.elementiOrdine.count())
+
+
+class ElementoOrdine(models.Model):
+    nome = models.TextField(max_length=250)
+    descrizione = models.TextField(max_length=400)
+    prezzo = models.DecimalField(max_digits=10, decimal_places=2)
+    categoria = models.TextField(max_length=250)
+    ordine = models.ForeignKey(Ordine, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Sold Product"
+        verbose_name_plural = "Sold Products"
+
+    def __str__(self):
+        return str(self.nome)
