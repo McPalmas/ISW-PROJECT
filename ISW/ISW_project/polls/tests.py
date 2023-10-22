@@ -110,7 +110,10 @@ class PagamentoTests(TestCase):
 
 class ElementoOrdineTests(TestCase):
     def setUp(self):
-        self.testElementoOrdine = ElementoOrdine.objects.create(nome='test', descrizione='test', prezzo=10.00, categoria='test')
+        self.testUser = User.objects.create_user(username='testuser', password='testpassword')
+        self.testPagamento = Pagamento.objects.create(user=self.testUser, nome_carta='test', numero_carta=123456789, scadenza='2021-01-01', cvv=123)
+        self.testOrdine = Ordine.objects.create(user = self.testUser,nome='test', cognome='test',email = 'a@mail.it',indirizzo='test', stato='test', citta='test', regione='test', provincia='test', codice_postale='test', pagamento=self.testPagamento)
+        self.testElementoOrdine = ElementoOrdine.objects.create(nome='test', descrizione='test', prezzo=10.00, categoria='test',ordine=self.testOrdine)
 
     def test_creazione_elemento_ordine(self):
         self.assertEqual(self.testElementoOrdine.nome, 'test')
@@ -123,15 +126,9 @@ class OrdineTests(TestCase):
         self.user = User.objects.create_user(username='testuser', password='testpassword')
         self.prodotto = Prodotto.objects.create(nome='test', descrizione='test', prezzo=10.00)
         self.pagamento = Pagamento.objects.create(user=self.user, nome_carta='test', numero_carta=123456789, scadenza='2021-01-01', cvv=123)
-        self.elemento_ordine = ElementoOrdine.objects.create(nome='test', descrizione='test', prezzo=10.00, categoria='test')
-        self.elemento_ordine2 = ElementoOrdine.objects.create(nome='test', descrizione='test', prezzo=20.00, categoria='test')
-        self.elemento_ordine3 = ElementoOrdine.objects.create(nome='test', descrizione='test', prezzo=30.00, categoria='test')
-        self.elemento_ordine.save()
-        self.elemento_ordine2.save()
-        self.elemento_ordine3.save()
         
     def test_creazione_ordine(self):
-        testOrdine = Ordine.objects.create(user=self.user, nome='test', cognome='test',email = 'test@mail.it',indirizzo='test', stato='test', citta='test', regione='test', provincia='test', codice_postale='test', pagamento=self.pagamento, elemento_ordine=self.elemento_ordine)
+        testOrdine = Ordine.objects.create(user=self.user, nome='test', cognome='test',email = 'test@mail.it',indirizzo='test', stato='test', citta='test', regione='test', provincia='test', codice_postale='test', pagamento=self.pagamento)
         self.assertEqual(testOrdine.user, self.user)
         self.assertEqual(testOrdine.nome, 'test')
         self.assertEqual(testOrdine.cognome, 'test')
@@ -274,12 +271,12 @@ class CarrelloViewTest(TestCase):
         self.prodotto2 = Prodotto.objects.create(id=101,nome='Prodotto di test2', descrizione='Descrizione di test2', prezzo=20.00)
 
     def test_user_not_logged(self):
-        response = self.client.get('/carrello/')
+        response = self.client.get('/shopping_cart/')
         self.assertEqual(response.status_code, 302)
 
     def test_page_exist(self):
         self.client.login(username='testuser', password='testpassword')
-        response = self.client.get('/carrello/')
+        response = self.client.get('/shopping_cart/')
         self.assertEqual(response.status_code, 200)
     
     def test_carrello_caricato_correttamente(self):
@@ -291,14 +288,14 @@ class CarrelloViewTest(TestCase):
         elemento_carrello_2 = ElementoCarrello.objects.create(
             carrello=carrello, prodotto=self.prodotto2, quantita=2
         )
-        response = self.client.get('/carrello/')
+        response = self.client.get('/shopping_cart/')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Prodotto di test')
         self.assertContains(response, 'Prodotto di test2')
 
     def test_carrello_vuoto(self):
         self.client.login(username='testuser', password='testpassword')
-        response = self.client.get('/carrello/')
+        response = self.client.get('/shopping_cart/')
         self.assertEqual(response.status_code, 200)
 
     def test_modifica_quantià_prodotto(self):
@@ -344,13 +341,13 @@ class checkoutViewTest(TestCase):
 
     def test_ordine_get(self):
         self.client.login(username='testuser', password='testpassword')
-        response = self.client.get('/ordine')
+        response = self.client.get('/order')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'polls/Checkout.html')
 
     def test_ordine_post(self):
         self.client.login(username='testuser', password='testpassword')
-        response = self.client.post('/ordine', {'nome': 'test',
+        response = self.client.post('/order', {'nome': 'test',
                                                     'cognome': 'test',
                                                     'email': 'test@mail.it',
                                                     'indirizzo': 'test',
