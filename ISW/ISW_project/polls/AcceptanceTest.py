@@ -66,8 +66,8 @@ class AcceptanceTest(LiveServerTestCase):
         products = self.browser.find_elements(By.CLASS_NAME, 'schedaProdotto')
 
         products[0].find_element(By.CLASS_NAME, 'aggiungiAlCarrello').click()
-        self.browser.find_element(By.CSS_SELECTOR, 'li a[href*="carrello"]').click()
-        self.assertEqual(self.browser.current_url, self.live_server_url + '/carrello/')
+        self.browser.find_element(By.CSS_SELECTOR, 'li a[href*="shopping_cart"]').click()
+        self.assertEqual(self.browser.current_url, self.live_server_url + '/shopping_cart/')
 
         prodotti_carrello = self.browser.find_elements(By.CLASS_NAME, 'infoOggetto')
         self.assertTrue(len(prodotti_carrello) > 0)
@@ -84,7 +84,7 @@ class AcceptanceTest(LiveServerTestCase):
         products = self.browser.find_elements(By.CLASS_NAME, 'schedaProdotto')
 
         products[0].find_element(By.CLASS_NAME, 'aggiungiAlCarrello').click()
-        self.browser.find_element(By.CSS_SELECTOR, 'li a[href*="carrello"]').click()
+        self.browser.find_element(By.CSS_SELECTOR, 'li a[href*="shopping_cart"]').click()
         quantita_prima = int(self.browser.find_element(By.ID, 'quantita').text)
         self.browser.find_element(By.CSS_SELECTOR, 'a[href*="increase_quantity"]').click()
         quantita_dopo = int(self.browser.find_element(By.ID, 'quantita').text)
@@ -102,7 +102,7 @@ class AcceptanceTest(LiveServerTestCase):
         products = self.browser.find_elements(By.CLASS_NAME, 'schedaProdotto')
 
         products[0].find_element(By.CLASS_NAME, 'aggiungiAlCarrello').click()
-        self.browser.find_element(By.CSS_SELECTOR, 'li a[href*="carrello"]').click()
+        self.browser.find_element(By.CSS_SELECTOR, 'li a[href*="shopping_cart"]').click()
 
         # Aumento la quantita
         self.browser.find_element(By.CSS_SELECTOR, 'a[href*="increase_quantity"]').click()
@@ -126,14 +126,14 @@ class AcceptanceTest(LiveServerTestCase):
         products = self.browser.find_elements(By.CLASS_NAME, 'schedaProdotto')
 
         products[0].find_element(By.CLASS_NAME, 'aggiungiAlCarrello').click()
-        self.browser.find_element(By.CSS_SELECTOR, 'li a[href*="carrello"]').click()
+        self.browser.find_element(By.CSS_SELECTOR, 'li a[href*="shopping_cart"]').click()
         prodotti_carrello = self.browser.find_elements(By.CLASS_NAME, 'infoOggetto')
         self.assertTrue(len(prodotti_carrello) > 0)
         self.browser.find_element(By.CSS_SELECTOR, 'a[href*="remove_product"]').click()
         prodotti_carrello = self.browser.find_elements(By.CLASS_NAME, 'infoOggetto')
         self.assertTrue(len(prodotti_carrello) == 0)
         time.sleep(2)
-    
+
     def test_ordine(self):
         self.browser.get(self.live_server_url + '/login/')
         username = self.browser.find_element(By.NAME, 'username')
@@ -145,7 +145,7 @@ class AcceptanceTest(LiveServerTestCase):
         products = self.browser.find_elements(By.CLASS_NAME, 'schedaProdotto')
 
         products[0].find_element(By.CLASS_NAME, 'aggiungiAlCarrello').click()
-        self.browser.find_element(By.CSS_SELECTOR, 'li a[href*="carrello"]').click()
+        self.browser.find_element(By.CSS_SELECTOR, 'li a[href*="shopping_cart"]').click()
 
         prodotti_carrello = self.browser.find_elements(By.CLASS_NAME, 'infoOggetto')
         self.assertTrue(len(prodotti_carrello) == 1 )
@@ -181,9 +181,9 @@ class AcceptanceTest(LiveServerTestCase):
             regione='RegioneTest',
             provincia='ProvinciaTest',
             codice_postale='12345',
-            # Assicurati che gli ID seguenti siano validi o sostituiscili con quelli appropriati
+
             pagamento__id=1,
-            elemento_ordine__id=1
+
         ).first()
 
         self.assertIsNotNone(ordine_creato)
